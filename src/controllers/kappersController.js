@@ -3116,7 +3116,9 @@ function kappersController() {
             }
         }
     ];
-
+    
+    let updateDB = 0;	/* temporary solution to get the data from database(one-time) */
+    
     function getKappersInAms(req, res, next) {
 
         const url = 'mongodb://localhost:27017';
@@ -3129,6 +3131,12 @@ function kappersController() {
                 debug('Connected correctly to server');
 
                 const db = client.db(dbName);
+                
+                /* temporary solution to get the data from database(one-time) */
+				if(!updateDB) {
+                   const response = await db.collection('kapers').insertMany(kappers_db);
+                   updateDB = 1;
+               }
 
                 const col = await db.collection('kapers');
 
